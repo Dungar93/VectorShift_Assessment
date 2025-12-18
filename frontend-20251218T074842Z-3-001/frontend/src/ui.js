@@ -1,37 +1,40 @@
 // frontend/src/ui.js
-// Displays the drag-and-drop UI
-// --------------------------------------------------
 
 import { useState, useRef, useCallback } from 'react';
 import ReactFlow, { Controls, Background, MiniMap } from 'reactflow';
 import { useStore } from './store';
 import { shallow } from 'zustand/shallow';
 
-// Import Original Nodes
+// --- 1. IMPORT ORIGINAL NODES ---
 import { InputNode } from './nodes/inputNode';
 import { LLMNode } from './nodes/llmNode';
 import { OutputNode } from './nodes/outputNode';
 import { TextNode } from './nodes/textNode';
 
-// Import New Nodes
-import { DateNode, NoteNode, IntegrationNode, FilterNode, TransformNode } from './nodes/exampleNodes';
+// --- 2. IMPORT NEW NODES (From their individual files) ---
+import { DateNode } from './nodes/dateNode';
+import { FilterNode } from './nodes/filterNode';
+import { IntegrationNode } from './nodes/integrationNode';
+import { TransformNode } from './nodes/transformNode';
+import { NoteNode } from './nodes/noteNode';
 
 import 'reactflow/dist/style.css';
 
 const gridSize = 20;
 const proOptions = { hideAttribution: true };
 
-// Register all nodes here so React Flow can render them
+// --- 3. REGISTER ALL NODES HERE ---
 const nodeTypes = {
   customInput: InputNode,
   llm: LLMNode,
   customOutput: OutputNode,
   text: TextNode,
+  // New Types
   date: DateNode,
-  note: NoteNode,
-  integration: IntegrationNode,
   filter: FilterNode,
+  integration: IntegrationNode,
   transform: TransformNode,
+  note: NoteNode,
 };
 
 const selector = (state) => ({
@@ -39,21 +42,22 @@ const selector = (state) => ({
   edges: state.edges,
   getNodeID: state.getNodeID,
   addNode: state.addNode,
-  onNodesChange: state.onNodesChange, // <--- We use the Store's function directly
-  onEdgesChange: state.onEdgesChange, // <--- We use the Store's function directly
+  onNodesChange: state.onNodesChange,
+  onEdgesChange: state.onEdgesChange,
   onConnect: state.onConnect,
 });
 
 export const PipelineUI = () => {
     const reactFlowWrapper = useRef(null);
     const [reactFlowInstance, setReactFlowInstance] = useState(null);
+    
     const {
       nodes,
       edges,
       getNodeID,
       addNode,
-      onNodesChange, // <--- Get from store
-      onEdgesChange, // <--- Get from store
+      onNodesChange,
+      onEdgesChange,
       onConnect
     } = useStore(selector, shallow);
 
@@ -80,7 +84,7 @@ export const PipelineUI = () => {
               x: event.clientX - reactFlowBounds.left,
               y: event.clientY - reactFlowBounds.top,
             });
-
+      
             const nodeID = getNodeID(type);
             const newNode = {
               id: nodeID,
@@ -95,10 +99,6 @@ export const PipelineUI = () => {
         [reactFlowInstance, getNodeID, addNode]
     );
 
-   // frontend/src/ui.js
-
-// ... (keep all your imports and the PipelineUI component logic exactly the same)
-
     const onDragOver = useCallback((event) => {
         event.preventDefault();
         event.dataTransfer.dropEffect = 'move';
@@ -106,18 +106,14 @@ export const PipelineUI = () => {
 
     return (
         <>
-        {/* TITAN UPGRADE: 
-            Changed height from '70vh' to 'calc(100vh - 100px)' 
-            This ensures the grid fills the screen but leaves space for the toolbar.
-        */}
-        <div ref={reactFlowWrapper} style={{width: '100vw', height: 'calc(100vh - 100px)'}}>
+        {/* TITAN UPGRADE: Height calculation allows space for the toolbar/header */}
+        <div ref={reactFlowWrapper} style={{ width: '100vw', height: 'calc(100vh - 80px)' }}>
             <ReactFlow
                 nodes={nodes}
                 edges={edges}
-                onNodesChange={onNodesChange} 
-                onEdgesChange={onEdgesChange} 
+                onNodesChange={onNodesChange}
+                onEdgesChange={onEdgesChange}
                 onConnect={onConnect}
-                deleteKeyCode={["Backspace", "Delete"]}
                 onDrop={onDrop}
                 onDragOver={onDragOver}
                 onInit={setReactFlowInstance}
@@ -125,23 +121,19 @@ export const PipelineUI = () => {
                 proOptions={proOptions}
                 snapGrid={[gridSize, gridSize]}
                 connectionLineType='smoothstep'
+                // Allows deleting nodes with Backspace/Delete keys
+                deleteKeyCode={["Backspace", "Delete"]} 
             >
-                {/* TITAN UPGRADE:
-                   Changed color to "rgba(29, 29, 32, 0.6)" 
-                   This allows your CSS gradient background to shine through the grid lines!
-                */}
                 <Background 
                     color="#aaa" 
-                    gap={20} 
-                    variant="dots" // Or "lines" if you prefer
+                    gap={gridSize} 
+                    // Transparent background so your CSS gradient shines through
                     style={{ backgroundColor: "rgba(29, 29, 32, 0.6)" }} 
-                    size={1} 
                 />
-                
                 <Controls />
-                <MiniMap style={{ height: 100, width: 150 }} zoomable pannable />
+                <MiniMap style={{ background: '#222', border: '1px solid #555' }} />
             </ReactFlow>
         </div>
         </>
-    )
-};
+    );
+}

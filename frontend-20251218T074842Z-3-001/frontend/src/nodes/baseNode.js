@@ -1,45 +1,33 @@
-// frontend/src/nodes/BaseNode.js
+// frontend/src/nodes/baseNode.js
 import React from 'react';
-import { Handle } from 'reactflow';
+import { Handle, Position } from 'reactflow';
 
-/**
- * BaseNode Component (Titan Edition)
- * Refactored to use the Titan CSS system for styling.
- * * Note: We removed the outer 'style' block because the 
- * .react-flow__node class in index.css now handles the 
- * glassmorphism, border, and shadows automatically.
- */
-export const BaseNode = ({ id, title, children, handles = [] }) => {
+export const BaseNode = ({ id, data, title, type, handles = [], children, style }) => {
   return (
-    <div className="titan-base-node">
-      {/* 1. THE HEADER 
-        Uses .node-header from index.css (Part 3) for the 
-        gradient top and uppercase typography.
-      */}
+    // 1. DYNAMIC CLASS: We add `node-${type}` so your CSS can color them (e.g., .node-date)
+    <div className={`titan-base-node node-${type?.toLowerCase() || 'default'}`} style={{...style}}>
+      
+      {/* 2. THE HEADER */}
       <div className="node-header">
-        {/* We can add a subtle icon or just the title */}
-        <span>{title}</span>
+        {/* Optional: Add an icon here if you want */}
+        <span style={{ fontWeight: 'bold' }}>{title}</span>
       </div>
 
-      {/* 2. THE BODY 
-        Uses .node-body from index.css for padding and layout.
-      */}
+      {/* 3. THE BODY */}
       <div className="node-body">
         {children}
       </div>
 
-      {/* 3. DYNAMIC HANDLES 
-        We removed the inline styles so the CSS can handle the 
-        glowing hover effects (.react-flow__handle-left/right).
-      */}
+      {/* 4. DYNAMIC HANDLES */}
       {handles.map((handle, index) => (
         <Handle
-          key={`${id}-${handle.id}-${index}`}
+          key={`${id}-${index}`}
           type={handle.type}
           position={handle.position}
-          id={`${id}-${handle.id}`}
-          className={`handle-${handle.position}`} // Optional: helps with specific targeting if needed
-          // Note: style prop removed to allow CSS animations
+          id={handle.id}
+          // CRITICAL FIX: We must pass 'handle.style' so the Text Node handles are spaced out!
+          style={handle.style || {}} 
+          className={`handle-${handle.type}`}
         />
       ))}
     </div>

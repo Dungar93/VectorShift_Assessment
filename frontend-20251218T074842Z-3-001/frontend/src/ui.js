@@ -95,6 +95,10 @@ export const PipelineUI = () => {
         [reactFlowInstance, getNodeID, addNode]
     );
 
+   // frontend/src/ui.js
+
+// ... (keep all your imports and the PipelineUI component logic exactly the same)
+
     const onDragOver = useCallback((event) => {
         event.preventDefault();
         event.dataTransfer.dropEffect = 'move';
@@ -102,14 +106,18 @@ export const PipelineUI = () => {
 
     return (
         <>
-        <div ref={reactFlowWrapper} style={{width: '100vw', height: '70vh'}}>
+        {/* TITAN UPGRADE: 
+            Changed height from '70vh' to 'calc(100vh - 100px)' 
+            This ensures the grid fills the screen but leaves space for the toolbar.
+        */}
+        <div ref={reactFlowWrapper} style={{width: '100vw', height: 'calc(100vh - 100px)'}}>
             <ReactFlow
                 nodes={nodes}
                 edges={edges}
                 onNodesChange={onNodesChange} 
                 onEdgesChange={onEdgesChange} 
                 onConnect={onConnect}
-                deleteKeyCode={["Backspace", "Delete"]} // <--- This enables the delete key!
+                deleteKeyCode={["Backspace", "Delete"]}
                 onDrop={onDrop}
                 onDragOver={onDragOver}
                 onInit={setReactFlowInstance}
@@ -118,13 +126,18 @@ export const PipelineUI = () => {
                 snapGrid={[gridSize, gridSize]}
                 connectionLineType='smoothstep'
             >
-              <Background 
-    color="#232329" 
-    gap={20} 
-    variant="lines"  // <--- This changes dots to a cool grid
-    size={1} 
-    lineWidth={0.5}
-/>
+                {/* TITAN UPGRADE:
+                   Changed color to "rgba(29, 29, 32, 0.6)" 
+                   This allows your CSS gradient background to shine through the grid lines!
+                */}
+                <Background 
+                    color="#aaa" 
+                    gap={20} 
+                    variant="dots" // Or "lines" if you prefer
+                    style={{ backgroundColor: "rgba(29, 29, 32, 0.6)" }} 
+                    size={1} 
+                />
+                
                 <Controls />
                 <MiniMap style={{ height: 100, width: 150 }} zoomable pannable />
             </ReactFlow>

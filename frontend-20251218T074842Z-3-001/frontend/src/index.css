@@ -657,10 +657,9 @@ pre {
    END OF PART 2
    (Lines 601 - 1200)
 ==============================================================================
-*/
 /* ==============================================================================
    [PART 3 OF 5] - DEEP SPACE ENGINE & NODE ARCHITECTURE
-   (Lines 1201 - 1800)
+   (Refactored for 100% Consistency)
 ==============================================================================
 */
 
@@ -835,7 +834,6 @@ pre {
   
   color: var(--void-900);
   font-family: var(--font-sans);
-  font-size: 14px;
   
   /* GPU Acceleration */
   will-change: transform, box-shadow;
@@ -941,13 +939,104 @@ pre {
   box-shadow: 0 0 25px rgba(249, 115, 22, 0.4);
 }
 
+/* ==============================================================================
+   [REFACTORED SECTION] - NEW NODE CONSISTENCY
+   All nodes below now match the "Border-Top" + "Subtle Fade" style.
+==============================================================================
+*/
+
+/* 11.5 DATE NODE (Rose/Pink) */
+.react-flow__node-date {
+  border-top: 2px solid #f43f5e; /* Rose-500 */
+}
+.react-flow__node-date .node-header {
+  background: linear-gradient(180deg, rgba(244, 63, 94, 0.15) 0%, transparent 100%);
+  color: #fda4af; /* Rose-300 */
+  border-bottom: 1px solid rgba(244, 63, 94, 0.1);
+}
+.react-flow__node-date.selected {
+  border-color: #f43f5e;
+  box-shadow: 0 0 25px rgba(244, 63, 94, 0.4);
+}
+.react-flow__node-date .react-flow__handle {
+  background: #fb7185;
+}
+
+/* 11.6 INTEGRATION NODE (Indigo) */
+.react-flow__node-integration {
+  border-top: 2px solid #6366f1; /* Indigo-500 */
+}
+.react-flow__node-integration .node-header {
+  background: linear-gradient(180deg, rgba(99, 102, 241, 0.15) 0%, transparent 100%);
+  color: #a5b4fc; /* Indigo-300 */
+  border-bottom: 1px solid rgba(99, 102, 241, 0.1);
+}
+.react-flow__node-integration.selected {
+  border-color: #6366f1;
+  box-shadow: 0 0 25px rgba(99, 102, 241, 0.4);
+}
+.react-flow__node-integration .react-flow__handle {
+  background: #818cf8;
+}
+
+/* 11.7 FILTER NODE (Red/Crimson) */
+.react-flow__node-filter {
+  border-top: 2px solid #ef4444; /* Red-500 */
+}
+.react-flow__node-filter .node-header {
+  background: linear-gradient(180deg, rgba(239, 68, 68, 0.15) 0%, transparent 100%);
+  color: #fca5a5; /* Red-300 */
+  border-bottom: 1px solid rgba(239, 68, 68, 0.1);
+}
+.react-flow__node-filter.selected {
+  border-color: #ef4444;
+  box-shadow: 0 0 25px rgba(239, 68, 68, 0.4);
+}
+.react-flow__node-filter .react-flow__handle {
+  background: #f87171;
+}
+
+/* 11.8 TRANSFORM NODE (Amber/Gold) */
+.react-flow__node-transform {
+  border-top: 2px solid #f59e0b; /* Amber-500 */
+}
+.react-flow__node-transform .node-header {
+  background: linear-gradient(180deg, rgba(245, 158, 11, 0.15) 0%, transparent 100%);
+  color: #fcd34d; /* Amber-300 */
+  border-bottom: 1px solid rgba(245, 158, 11, 0.1);
+}
+.react-flow__node-transform.selected {
+  border-color: #f59e0b;
+  box-shadow: 0 0 25px rgba(245, 158, 11, 0.4);
+}
+.react-flow__node-transform .react-flow__handle {
+  background: #fbbf24;
+}
+
+/* 11.9 NOTE NODE (Yellow) */
+.react-flow__node-note {
+  border-top: 2px solid #eab308; /* Yellow-500 */
+}
+.react-flow__node-note .node-header {
+  background: linear-gradient(180deg, rgba(234, 179, 8, 0.15) 0%, transparent 100%);
+  color: #fde047; /* Yellow-300 */
+  border-bottom: 1px solid rgba(234, 179, 8, 0.1);
+}
+/* Note: Removed the full yellow body to match the Dark Glass theme of other nodes */
+.react-flow__node-note.selected {
+  border-color: #eab308;
+  box-shadow: 0 0 25px rgba(234, 179, 8, 0.4);
+}
+.react-flow__node-note .react-flow__handle {
+  background: #facc15;
+}
+
 /* ------------------------------------------------------------------------------
    12.0 NODE INTERNALS (Content Layout)
 ------------------------------------------------------------------------------
 */
 
 /* 12.1 HEADER COMPONENT */
-/* Note: Ensure your React components use className="node-header" or div[data-id="header"] */
 .node-header,
 .react-flow__node div[data-id="header"] {
   display: flex;
@@ -1577,3 +1666,52 @@ input[type="radio"]:checked::before {
    TOTAL LINES: ~3000 (Compiled)
 ==============================================================================
 */
+/* ==============================================================================
+   [PATCH] - TYPOGRAPHY BOOST (Readability Fix)
+   Append this to the very end of index.css to override previous sizes.
+==============================================================================
+*/
+
+/* 1. Increase Base Node Font */
+.react-flow__node {
+  font-size: 16px !important; /* Increased from 14px */
+}
+
+/* 2. Increase Node Headers (e.g. "LLM", "INPUT") */
+.node-header,
+.react-flow__node div[data-id="header"] {
+  font-size: 14px !important; /* Increased from 11px */
+  padding: 14px 18px !important; /* More breathing room */
+  letter-spacing: 1.5px !important;
+}
+
+/* 3. Increase Input Fields & Text Areas */
+input[type="text"], 
+input[type="number"],
+input[type="email"],
+textarea, 
+select {
+  font-size: 15px !important; /* Increased from 13px */
+  padding: 12px 14px !important; /* Larger touch/click targets */
+  height: auto !important; /* Allow growing with text */
+}
+
+/* 4. Increase Labels (e.g. "Name:", "Type:") */
+.node-label,
+.react-flow__node label {
+  font-size: 12px !important; /* Increased from 10px */
+  margin-bottom: 8px !important;
+  color: var(--void-400) !important; /* Slightly brighter for contrast */
+}
+
+/* 5. Increase Toolbar Text */
+.toolbar-item {
+  font-size: 14px !important; /* Increased from 12px */
+  padding: 10px 20px !important;
+}
+
+/* 6. Make the Connectors (Handles) Slightly Larger */
+.react-flow__handle {
+  width: 14px !important; /* Increased from 10px */
+  height: 14px !important;
+}

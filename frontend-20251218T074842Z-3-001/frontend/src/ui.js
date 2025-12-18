@@ -1,4 +1,4 @@
-// ui.js
+// frontend/src/ui.js
 // Displays the drag-and-drop UI
 // --------------------------------------------------
 
@@ -6,20 +6,33 @@ import { useState, useRef, useCallback } from 'react';
 import ReactFlow, { Controls, Background, MiniMap } from 'reactflow';
 import { useStore } from './store';
 import { shallow } from 'zustand/shallow';
+
+// Import Original Nodes
 import { InputNode } from './nodes/inputNode';
 import { LLMNode } from './nodes/llmNode';
 import { OutputNode } from './nodes/outputNode';
 import { TextNode } from './nodes/textNode';
 
+// Import New Nodes (ADDED THESE)
+import { DateNode, NoteNode, IntegrationNode, FilterNode, TransformNode } from './nodes/exampleNodes';
+
 import 'reactflow/dist/style.css';
 
 const gridSize = 20;
 const proOptions = { hideAttribution: true };
+
+// Register all nodes here so React Flow can render them
 const nodeTypes = {
   customInput: InputNode,
   llm: LLMNode,
   customOutput: OutputNode,
   text: TextNode,
+  // New Node Registrations
+  date: DateNode,
+  note: NoteNode,
+  integration: IntegrationNode,
+  filter: FilterNode,
+  transform: TransformNode,
 };
 
 const selector = (state) => ({
@@ -90,7 +103,7 @@ export const PipelineUI = () => {
 
     return (
         <>
-        <div ref={reactFlowWrapper} style={{width: '100wv', height: '70vh'}}>
+        <div ref={reactFlowWrapper} style={{width: '100vw', height: '70vh'}}>
             <ReactFlow
                 nodes={nodes}
                 edges={edges}
@@ -112,4 +125,4 @@ export const PipelineUI = () => {
         </div>
         </>
     )
-}
+};
